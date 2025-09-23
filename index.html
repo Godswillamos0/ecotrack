@@ -70,7 +70,7 @@
         </div>
 
         <!-- Scrollable messages -->
-        <div id="messagesWrapper" class="flex-1 overflow-y-auto space-y-6 pr-2">
+        <div id="messagesWrapper" class="flex-1 overflow-y-auto space-y-6 pr-2 pb-28">
           <div class="flex items-start gap-4">
             <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBd5eIBhwQs_WrrAPA0jW0wF4u5X27VMGhAj67zyCj9dM5hyeX2HZ5XTWLX1zpTCan2YdeA8w8jkff65Vfdsj5NdlcrEykIDk132GXM9OhtJC-Mat-qBeDIaeFP09bDQxUXh6eGMdx11ymY27VXHY6pv1ocjCkb05k3epsKo9VaWewb-NMKH54No6lBzo7WOk1S8VrJ0Q3YcCAQPa_VSJyRJ1JncV2J3qPNZYZqL7wfQGqAWoPvxwWn-Z6d_OzJ9U6hUID6OY2mXkVd");'></div>
             <div class="flex flex-col gap-1">
@@ -83,10 +83,11 @@
         </div>
 
         <!-- Fixed input area -->
-        <div class="mt-4 flex items-center gap-4 border-t border-slate-200 dark:border-slate-800 pt-4">
+        <div class="fixed bottom-0 left-0 right-0 flex justify-center items-center gap-4 border-t border-slate-200 bg-background-light dark:bg-background-dark dark:border-slate-800 p-4 shadow-md">
+            
           <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAXesp7EyVKd8XChi3VLwgWhC6gA3-XhguJ5GgwhQFSwd2VgXWVBW73IsMckL6hWtsMKuBMy_JrdBU2x5yCpClH22pilXocqfiycvwP2EO3YIlBy_uHIpXIFDJmKTJK52xkuVDq0yktCnYxEJinOfWQZo4pUGtpkpW4XR_dGv7mQCHARFcYuzaxlrpD9ofb9dV8P8Wy6dd_0AF9B3HwyGfkqDZ1zgoTu_tDhWggjFzXvEvnFT-pDd6K0m9H075iieXXmw09XLDF4gtv");'></div>
 
-          <form id="chatForm" class="flex w-full items-center" autocomplete="off">
+          <form id="chatForm" style="width: 60%;" class="flex w-full items-center" autocomplete="off">
             <input id="messageInput" class="form-input h-12 flex-1 rounded-l-lg border-slate-300 bg-slate-100 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" placeholder="Type your activities here..." type="text" />
             <button id="imageBtn" class="flex h-12 w-12 items-center justify-center border-y border-r border-slate-300 bg-slate-100 text-slate-500 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700" type="button" title="Attach image">
               <span class="material-symbols-outlined"> image </span>
