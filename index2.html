@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>EcoTrack Chat</title>
+  <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#17cf54",
+            "background-light": "#f6f8f6",
+            "background-dark": "#112116",
+          },
+          fontFamily: {
+            display: ["Inter"],
+          },
+          borderRadius: { DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px" },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* small styles for the "thinking" animation */
+    @keyframes dots {
+      0% { content: ""; }
+      33% { content: "."; }
+      66% { content: ".."; }
+      100% { content: "..."; }
+    }
+    .ellipsis::after {
+      content: "";
+      animation: dots 1s steps(3,end) infinite;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200">
+  <div class="flex h-screen flex-col">
+    <header class="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6">
+      <div class="flex items-center gap-4">
+        <div class="h-8 w-8 text-primary">
+         <!-- <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
+          </svg> -->
+        </div>
+        <h1 class="text-xl font-bold text-slate-900 dark:text-white">EcoTrack</h1>
+      </div>
+      <nav class="hidden items-center gap-6 md:flex">
+        <a class="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary" href="#">Dashboard</a>
+        <a class="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary" href="#">Activities</a>
+        <a class="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary" href="#">Insights</a>
+        <a class="text-sm font-medium text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-primary" href="#">Community</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700">
+          <span class="material-symbols-outlined"> notifications </span>
+        </button>
+        <div class="h-10 w-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCbGsILQyll4E4SDa3RwLC1lmqKvZEn7LvDYfSms7Xq5HfOH_M4V1fjGr9L5o05jGs9_v1vatOS5dYRSFdmMU0t6-Io3pjrlDGPyB8fZsfxIA6ulkegA_sVtiqBxQRusLJYADlwQxHcjDPqUQGaO_u_vaof41vetqougWp5VGyCMQuZxAcmvyT2ACvwByogl9k7zkxyCvxwwpeuzlCepqMiKTBSTYBSY-upEQY_HX1ifyeBbFZEWO2RNrNUky5J6daY9D24Qq3qxQpI");'></div>
+      </div>
+    </header>
+
+    <main class="flex flex-1 flex-col overflow-hidden">
+      <div class="mx-auto flex w-full max-w-4xl flex-1 flex-col p-4 md:p-6">
+        <div class="mb-6">
+          <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Chat with EcoTrack</h2>
+          <p class="text-slate-500 dark:text-slate-400">Your personal assistant for a greener lifestyle.</p>
+        </div>
+
+        <!-- Chat area -->
+        <div id="messagesWrapper" class="flex-1 space-y-6 overflow-y-auto pr-2">
+          <!-- Initial bot message - kept in markup so layout matches your design -->
+          <div class="flex items-start gap-4">
+            <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBd5eIBhwQs_WrrAPA0jW0wF4u5X27VMGhAj67zyCj9dM5hyeX2HZ5XTWLX1zpTCan2YdeA8w8jkff65Vfdsj5NdlcrEykIDk132GXM9OhtJC-Mat-qBeDIaeFP09bDQxUXh6eGMdx11ymY27VXHY6pv1ocjCkb05k3epsKo9VaWewb-NMKH54No6lBzo7WOk1S8VrJ0Q3YcCAQPa_VSJyRJ1JncV2J3qPNZYZqL7wfQGqAWoPvxwWn-Z6d_OzJ9U6hUID6OY2mXkVd");'></div>
+            <div class="flex flex-col gap-1">
+              <p class="text-sm font-medium text-slate-500 dark:text-slate-400">EcoTrack</p>
+              <div class="max-w-md rounded-lg bg-slate-100 p-3 text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+                <p>Hi there! I'm here to help you track your carbon footprint. Tell me about your daily activities, and I'll calculate your carbon score and provide eco-friendly suggestions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="mt-auto flex items-center gap-4 border-t border-slate-200 dark:border-slate-800 pt-4">
+          <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAXesp7EyVKd8XChi3VLwgWhC6gA3-XhguJ5GgwhQFSwd2VgXWVBW73IsMckL6hWtsMKuBMy_JrdBU2x5yCpClH22pilXocqfiycvwP2EO3YIlBy_uHIpXIFDJmKTJK52xkuVDq0yktCnYxEJinOfWQZo4pUGtpkpW4XR_dGv7mQCHARFcYuzaxlrpD9ofb9dV8P8Wy6dd_0AF9B3HwyGfkqDZ1zgoTu_tDhWggjFzXvEvnFT-pDd6K0m9H075iieXXmw09XLDF4gtv");'></div>
+
+          <form id="chatForm" class="flex w-full items-center" autocomplete="off">
+            <input id="messageInput" class="form-input h-12 flex-1 rounded-l-lg border-slate-300 bg-slate-100 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" placeholder="Type your activities here..." type="text" />
+            <button id="imageBtn" class="flex h-12 w-12 items-center justify-center border-y border-r border-slate-300 bg-slate-100 text-slate-500 hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700" type="button" title="Attach image">
+              <span class="material-symbols-outlined"> image </span>
+            </button>
+            <button id="sendBtn" class="flex h-12 w-16 items-center justify-center rounded-r-lg bg-primary text-white hover:bg-primary/90" type="submit" title="Send message">
+              <span class="material-symbols-outlined"> send </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ========== CONFIG ==========
+    // Replace with your backend endpoint that accepts { message: string } and returns { reply: string }
+    const API_URL = "https://your-api-endpoint.com/chat";
+
+    // ========== SELECTORS ==========
+    const messagesWrapper = document.getElementById("messagesWrapper");
+    const chatForm = document.getElementById("chatForm");
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    // helper to auto-scroll to bottom
+    function scrollToBottom() {
+      // small delay so DOM updates first
+      requestAnimationFrame(() => {
+        messagesWrapper.scrollTop = messagesWrapper.scrollHeight;
+      });
+    }
+
+    // create user message element (matches design)
+    function createUserMessageElement(text) {
+      const container = document.createElement("div");
+      container.className = "flex items-start justify-end gap-4";
+
+      container.innerHTML = `
+        <div class="flex flex-col items-end gap-1">
+          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Sophia</p>
+          <div class="max-w-md rounded-lg bg-primary p-3 text-white"><p></p></div>
+        </div>
+        <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuABSNXp51sgOtGvO-uxjjHKX4uj6vMduCG6LOqpUfcA8IBmN2aDyws73kD7soR9OIYdl2QrT0Z70UchCBcrjaZQeWu7rcu6lzEv-r3qK3r-8zZt-E8iWznbh_SzhvsQBwbE524cT-5c6gwQknpnDtOs319KE_4dinx17YD9Xmiry0phqC_8CR4po4qTcxnm09AcZbnZ6BRhbxuUumdzEbUk97YvGpVsaJIe3380ce0jJgGgHQb4k0A5CLEuFo8GuHO8pxpUr1SaNu3t");'></div>
+      `;
+      container.querySelector("div.max-w-md p").textContent = text;
+      return container;
+    }
+
+    // create bot message element (matches design)
+    function createBotMessageElement(htmlContent) {
+      const container = document.createElement("div");
+      container.className = "flex items-start gap-4";
+
+      container.innerHTML = `
+        <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBd5eIBhwQs_WrrAPA0jW0wF4u5X27VMGhAj67zyCj9dM5hyeX2HZ5XTWLX1zpTCan2YdeA8w8jkff65Vfdsj5NdlcrEykIDk132GXM9OhtJC-Mat-qBeDIaeFP09bDQxUXh6eGMdx11ymY27VXHY6pv1ocjCkb05k3epsKo9VaWewb-NMKH54No6lBzo7WOk1S8VrJ0Q3YcCAQPa_VSJyRJ1JncV2J3qPNZYZqL7wfQGqAWoPvxwWn-Z6d_OzJ9U6hUID6OY2mXkVd");'></div>
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">EcoTrack</p>
+          <div class="max-w-md rounded-lg bg-slate-100 p-3 text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+            ${htmlContent}
+          </div>
+        </div>
+      `;
+      return container;
+    }
+
+    // create a thinking placeholder (bot)
+    function createThinkingElement() {
+      const container = document.createElement("div");
+      container.className = "flex items-start gap-4";
+      container.innerHTML = `
+        <div class="h-10 w-10 shrink-0 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBd5eIBhwQs_WrrAPA0jW0wF4u5X27VMGhAj67zyCj9dM5hyeX2HZ5XTWLX1zpTCan2YdeA8w8jkff65Vfdsj5NdlcrEykIDk132GXM9OhtJC-Mat-qBeDIaeFP09bDQxUXh6eGMdx11ymY27VXHY6pv1ocjCkb05k3epsKo9VaWewb-NMKH54No6lBzo7WOk1S8VrJ0Q3YcCAQPa_VSJyRJ1JncV2J3qPNZYZqL7wfQGqAWoPvxwWn-Z6d_OzJ9U6hUID6OY2mXkVd");'></div>
+        <div class="flex flex-col gap-1">
+          <p class="text-sm font-medium text-slate-500 dark:text-slate-400">EcoTrack</p>
+          <div class="max-w-md rounded-lg bg-slate-100 p-3 text-slate-800 dark:bg-slate-800 dark:text-slate-200">
+            <p class="ellipsis">Thinking</p>
+          </div>
+        </div>
+      `;
+      return container;
+    }
+
+    // safe injection for simple text -> returns escaped text
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replaceAll('&', "&amp;")
+        .replaceAll('<', "&lt;")
+        .replaceAll('>', "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // handle form submit
+    chatForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const text = messageInput.value.trim();
+      if (!text) return;
+
+      // 1) append user message immediately
+      const userEl = createUserMessageElement(text);
+      messagesWrapper.appendChild(userEl);
+      messageInput.value = "";
+      scrollToBottom();
+
+      // 2) append thinking placeholder
+      const thinkingEl = createThinkingElement();
+      messagesWrapper.appendChild(thinkingEl);
+      scrollToBottom();
+
+      // 3) call API
+      try {
+        // POST payload: { message: "..." }
+        // Replace API_URL above with your endpoint; keep CORS in mind if calling from the browser.
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        if (!res.ok) {
+          throw new Error(`Server responded ${res.status}`);
+        }
+
+        // expect JSON like { reply: "<string or html>" }
+        const data = await res.json();
+
+        // remove thinking element
+        thinkingEl.remove();
+
+        // If the backend returns HTML (for lists/bold), allow it. Otherwise escape plain text.
+        let contentHTML = "";
+        if (typeof data.reply === "string") {
+          // simple heuristic: if it contains '<' assume it's intended HTML; else escape and convert newlines to <p>
+          if (data.reply.trim().includes("<")) {
+            contentHTML = data.reply;
+          } else {
+            const escaped = escapeHtml(data.reply);
+            // maintain newlines as paragraphs
+            contentHTML = escaped.split(/\n+/).map(s => `<p>${s}</p>`).join("");
+          }
+        } else {
+          // fallback
+          contentHTML = "<p>Sorry, no response.</p>";
+        }
+
+        const botEl = createBotMessageElement(contentHTML);
+        messagesWrapper.appendChild(botEl);
+        scrollToBottom();
+
+      } catch (err) {
+        // remove thinking and show error
+        thinkingEl.remove();
+        const botEl = createBotMessageElement(`<p><strong>Error:</strong> Unable to reach the server.</p>`);
+        messagesWrapper.appendChild(botEl);
+        console.error(err);
+        scrollToBottom();
+      }
+    });
+
+    // Optional: allow pressing Escape to clear input
+    messageInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") messageInput.value = "";
+    });
+
+    // ensure initial scroll to bottom (if page content big)
+    scrollToBottom();
+  </script>
+</body>
+</html>
