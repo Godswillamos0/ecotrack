@@ -1,4 +1,5 @@
 fastapi
 uvicorn
-dotenv
 groq
+schedule==1.2.1
+dotenv
