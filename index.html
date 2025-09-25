@@ -139,6 +139,7 @@
       return container;
     }
 
+    
     function createThinkingElement() {
       const container = document.createElement("div");
       container.className = "flex items-start gap-4";
@@ -153,6 +154,11 @@
       `;
       return container;
     }
+
+    function boldifyText(input) {
+  // This regex finds anything between pairs of ** **
+  return input.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+}
 
     function escapeHtml(unsafe) {
       return unsafe.replaceAll('&', "&amp;")
@@ -191,10 +197,10 @@
         let contentHTML = "";
         if (typeof data.reply === "string") {
           if (data.reply.trim().includes("<")) {
-            contentHTML = data.reply;
+            contentHTML = boldifyText(data.reply);
           } else {
             const escaped = escapeHtml(data.reply);
-            contentHTML = escaped.split(/\n+/).map(s => `<p>${s}</p>`).join("");
+            contentHTML = boldifyText(escaped.split(/\n+/).map(s => `<p>${s}</p>`).join(""));
           }
         } else {
           contentHTML = "<p>Sorry, no response.</p>";
@@ -215,3 +221,4 @@
   </script>
 </body>
 </html>
+
