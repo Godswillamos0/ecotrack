@@ -88,15 +88,11 @@ def home():
         "schedules": SCHEDULES
     } 
 
-
-
-
 @app.get("/ping")
 def home():
     return {
         "message": "pinging ..."
     } 
-
 
 
 class Message(BaseModel):
@@ -105,7 +101,7 @@ class Message(BaseModel):
 
 @app.post("/chat")
 async def chat_with_ai(message: Message):
-    return generate_response(message.message)
-
-  
+    return {
+        "reply" : generate_response(message.message)
+        }
 
