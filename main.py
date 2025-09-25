@@ -89,6 +89,16 @@ def home():
     } 
 
 
+
+
+@app.get("/ping")
+def home():
+    return {
+        "message": "pinging ..."
+    } 
+
+
+
 class Message(BaseModel):
     message: str = Field(..., example="Hello, how are you?")
 
@@ -98,3 +108,4 @@ async def chat_with_ai(message: Message):
     return generate_response(message.message)
 
   
+
