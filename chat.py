@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
+from langchain.prompts import PromptTemplate
 
 # Load env vars
 load_dotenv()
@@ -33,10 +34,25 @@ llm = ChatGroq(
 # Memory object
 memory = ConversationBufferMemory(return_messages=True)
 
-# LangChain conversation wrapper
+# System-level ecological instructions
+eco_prompt = PromptTemplate(
+    input_variables=["history", "input"],
+    template=(
+        "You are EcoTrack, an AI that helps people understand their ecological impact. "
+        "Every reply must:\n"
+        "1. Estimate their daily or activity-based carbon footprint (in grams or kg CO₂e).\n"
+        "2. Provide 2–3 personalized, practical tips to reduce emissions and live sustainably.\n\n"
+        "Conversation so far:\n{history}\n\n"
+        "User: {input}\n"
+        "EcoTrack:"
+    )
+)
+
+# LangChain conversation wrapper with custom prompt
 conversation = ConversationChain(
     llm=llm,
     memory=memory,
+    prompt=eco_prompt,
     verbose=True
 )
 
@@ -64,7 +80,7 @@ def chat(user_id, user_input):
     # Load history for this user
     load_history(user_id)
 
-    # Generate response
+    # Generate response with eco-prompt
     response = conversation.predict(input=user_input)
 
     # Save both user + AI messages
@@ -73,9 +89,9 @@ def chat(user_id, user_input):
 
     return response
 
+
 # Example usage
 if __name__ == "__main__":
     uid = "user_123"
-    print(chat(uid, "What is my name?"))
-    #print(chat(uid, "Can you remind me what I just asked?"))
-
+    print(chat(uid, "I took a car for 10km today and ate beef for lunch."))
+    print(chat(uid, "What can I do tomorrow to reduce my footprint?"))
