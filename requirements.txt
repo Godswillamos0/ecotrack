@@ -40,4 +40,6 @@ tenacity==9.1.2
 typing-inspection==0.4.1
 typing_extensions==4.15.0
 urllib3==2.5.0
+uvicorn
 zstandard==0.25.0
+
