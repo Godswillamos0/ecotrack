@@ -6,7 +6,7 @@ from email.message import EmailMessage
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from chat import chat
+from chat import chat as ai_response
 from dotenv import load_dotenv
 import os
 
@@ -48,7 +48,7 @@ SCHEDULES = [
     {
         "time": "08:00",  # Morning email
         "subject": "Good Morning! Ecotraca",
-        "message": f"This is your morning message. {chat("email_ID", "Give me tips for a green living")}"
+        "message": f"This is your morning message. {ai_response("email_ID", "Give me tips for a green living")}"
     },
     {
         "time": "23:37",  # Evening email
@@ -104,3 +104,4 @@ def home():
 
 
   
+
