@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoTrack Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#17cf54",
+              "background-light": "#f6f8f6",
+              "background-dark": "#112116",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100">
+<div class="flex min-h-screen flex-col">
+<header class="w-full">
+<nav class="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+<div class="flex items-center gap-3">
+<svg class="h-8 w-8 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
+</svg>
+<h1 class="text-xl font-bold text-gray-900 dark:text-white">EcoTrack</h1>
+</div>
+<div class="hidden items-center gap-8 md:flex">
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">Home</a>
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">About</a>
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">Contact</a>
+<button class="rounded-lg bg-primary/20 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/30 dark:bg-primary/30 dark:hover:bg-primary/40">Sign Up</button>
+</div>
+</nav>
+</header>
+<main class="flex flex-1 items-center justify-center py-12 sm:px-6 lg:px-8">
+<div class="w-full max-w-md space-y-8 rounded-xl bg-white/5 p-8 dark:bg-black/10">
+<div class="text-center">
+<h2 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Welcome Back</h2>
+<p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Log in to continue your journey.</p>
+</div>
+<form action="#" class="space-y-6" method="POST">
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="email">Email address</label>
+<div class="mt-1">
+<input autocomplete="email" class="block w-full appearance-none rounded-lg border border-gray-300 bg-background-light px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-background-dark dark:text-white dark:placeholder-gray-400 dark:focus:border-primary sm:text-sm" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password">Password</label>
+<div class="mt-1">
+<input autocomplete="current-password" class="block w-full appearance-none rounded-lg border border-gray-300 bg-background-light px-3 py-2 text-gray-900 placeholder-gray-500 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-background-dark dark:text-white dark:placeholder-gray-400 dark:focus:border-primary sm:text-sm" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-sm">
+<a class="font-medium text-primary hover:text-primary/80" href="#">Forgot your password?</a>
+</div>
+</div>
+<div>
+<button class="flex w-full justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-background-dark shadow-sm transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark" type="submit">Log In</button>
+</div>
+</form>
+</div>
+</main>
+</div>
+<script>
+document.querySelector("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const emailOrUsername = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  // FormData in x-www-form-urlencoded format
+  const formData = new URLSearchParams();
+  formData.append("username", emailOrUsername); // backend expects "username"
+  formData.append("password", password);
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/auth/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData.toString()
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("JWT:", data.access_token);
+
+      // Save token to localStorage
+      localStorage.setItem("access_token", data.access_token);
+
+      alert("Login successful 🎉");
+      window.location.href = "/chat.html"; // redirect after login
+    } else {
+      const error = await response.json();
+      alert("Login failed: " + error.detail);
+    }
+  } catch (err) {
+    alert("Network error: " + err.message);
+  }
+});
+</script>
+
+</body></html>
