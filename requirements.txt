@@ -1,6 +1,5 @@
 annotated-types==0.7.0
 anyio==4.11.0
-bcrypt
 certifi==2025.8.3
 charset-normalizer==3.4.3
 distro==1.9.0
@@ -22,7 +21,8 @@ langchain-text-splitters==0.3.11
 langsmith==0.4.31
 orjson==3.11.3
 packaging==25.0
-passlib==1.7.4
+bcrypt==4.0.1
+passlib[bcrypt]==1.7.4
 pyasn1==0.6.1
 pydantic==2.11.9
 pydantic_core==2.33.2
@@ -44,6 +44,7 @@ typing_extensions==4.15.0
 urllib3==2.5.0
 uvicorn
 zstandard==0.25.0
+
 
 
 
