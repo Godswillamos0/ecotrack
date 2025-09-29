@@ -6,9 +6,20 @@ from email.message import EmailMessage
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from chat import generate_response
+from chat import chat
 from dotenv import load_dotenv
 import os
+
+
+from sqlalchemy.orm import Session
+from fastapi import FastAPI
+import models
+from database import engine
+from routers import auth, chat
+
+
+
+models.Base.metadata.create_all(bind=engine)
 
 # Load API key from .env
 load_dotenv()
@@ -24,6 +35,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
+app.include_router(chat.router)
+
 # Email Config (you should move these to environment variables in production)
 EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')  # Your email address
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')  # Your email password or app-specific password
@@ -34,10 +48,10 @@ SCHEDULES = [
     {
         "time": "08:00",  # Morning email
         "subject": "Good Morning! Ecotraca",
-        "message": f"This is your morning message. {generate_response("Give me tips for a green living")}"
+        "message": f"This is your morning message. {chat("email_ID", "Give me tips for a green living")}"
     },
     {
-        "time": "18:30",  # Evening email
+        "time": "23:37",  # Evening email
         "subject": "Good Evening! Ecotraca",
         "message": """Reminder: Hope you had a productive day!
         You can also ask me about your carbon footprint and how to reduce it. Just reply to this email with your activities! 
@@ -88,20 +102,5 @@ def home():
         "schedules": SCHEDULES
     } 
 
-@app.get("/ping")
-def home():
-    return {
-        "message": "pinging ..."
-    } 
 
-
-class Message(BaseModel):
-    message: str = Field(..., example="Hello, how are you?")
-
-
-@app.post("/chat")
-async def chat_with_ai(message: Message):
-    return {
-        "reply" : generate_response(message.message)
-        }
-
+  
