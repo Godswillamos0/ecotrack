@@ -9,6 +9,10 @@ from models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 import re
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 router = APIRouter(
@@ -16,8 +20,8 @@ router = APIRouter(
     tags=['auth']
 )
 
-SECRET_KEY = 'a346e558928942d326ffeb3378d0f9f43708cc82f787e89a12ff7561c5b16f63'
-ALGORITHM = 'HS256'
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 
 bcrypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='auth/token')
