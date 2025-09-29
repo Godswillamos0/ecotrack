@@ -46,12 +46,12 @@ RECIPIENT = os.getenv('RECIPIENT')  # Recipient email address
 # Define the two different times and messages
 SCHEDULES = [
     {
-        "time": "08:00",  # Morning email
+        "time": "08:00",
         "subject": "Good Morning! Ecotraca",
-        "message": f"This is your morning message. {ai_response("email_ID", "Give me tips for a green living")}"
+        "message": "This is your morning message."  # Placeholder
     },
     {
-        "time": "23:37",  # Evening email
+        "time": "23:37",
         "subject": "Good Evening! Ecotraca",
         "message": """Reminder: Hope you had a productive day!
         You can also ask me about your carbon footprint and how to reduce it. Just reply to this email with your activities! 
@@ -60,7 +60,6 @@ SCHEDULES = [
 ]
 
 def send_email(subject: str, content: str):
-    
     msg = EmailMessage()
     msg['Subject'] = subject
     msg['From'] = EMAIL_ADDRESS
@@ -79,11 +78,20 @@ def run_scheduler():
     print("⏳ Scheduler started. Setting up daily emails...")
 
     for schedule_item in SCHEDULES:
-        schedule.every().day.at(schedule_item['time']).do(
-            send_email,
-            subject=schedule_item['subject'],
-            content=schedule_item['message']
-        )
+        if schedule_item["subject"].startswith("Good Morning"):
+            # dynamically fetch AI response at runtime
+            dynamic_message = f"{schedule_item['message']} {ai_response('email_ID', 'Give me tips for a green living')}"
+            schedule.every().day.at(schedule_item['time']).do(
+                send_email,
+                subject=schedule_item['subject'],
+                content=dynamic_message
+            )
+        else:
+            schedule.every().day.at(schedule_item['time']).do(
+                send_email,
+                subject=schedule_item['subject'],
+                content=schedule_item['message']
+            )
         print(f"📅 Scheduled '{schedule_item['subject']}' at {schedule_item['time']}.")
 
     while True:
@@ -104,4 +112,5 @@ def home():
 
 
   
+
 
