@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoTrack - Sign Up</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#17cf54",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#112116",
+                    },
+                    fontFamily: {
+                        display: ["Inter"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px"
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200">
+<div class="flex h-screen flex-col lg:flex-row">
+<div class="flex flex-1 items-center justify-center p-6 lg:p-12">
+<div class="w-full max-w-md">
+<div class="mb-8 text-center">
+<div class="flex justify-center items-center gap-3 mb-4">
+<div class="h-12 w-12 text-primary">
+
+</div>
+<h1 class="text-3xl font-bold text-slate-900 dark:text-white">EcoTrack</h1>
+</div>
+<h2 class="text-2xl font-semibold text-slate-900 dark:text-white">Create your account</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-2">Join us in making the world a greener place.</p>
+</div>
+<form class="space-y-4">
+<div>
+<label class="mb-2 block text-sm font-medium text-slate-600 dark:text-slate-300" for="email">
+                        Email Address
+                    </label>
+<input class="form-input h-12 w-full rounded-lg border-slate-300 bg-slate-100 px-4 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" id="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-slate-600 dark:text-slate-300" for="username">
+                        Username
+                    </label>
+<input class="form-input h-12 w-full rounded-lg border-slate-300 bg-slate-100 px-4 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" id="username" placeholder="your_username" required="" type="text"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-slate-600 dark:text-slate-300" for="password">
+                        Password
+                    </label>
+<input class="form-input h-12 w-full rounded-lg border-slate-300 bg-slate-100 px-4 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" id="password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-slate-600 dark:text-slate-300" for="confirm-password">
+                        Confirm Password
+                    </label>
+<input class="form-input h-12 w-full rounded-lg border-slate-300 bg-slate-100 px-4 text-slate-800 placeholder-slate-400 focus:border-primary focus:ring-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder-slate-500 dark:focus:border-primary" id="confirm-password" placeholder="••••••••" required="" type="password"/>
+</div>
+<div class="pt-2">
+<button class="flex h-12 w-full items-center justify-center rounded-lg bg-primary text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark" type="submit">
+                        Sign Up
+                    </button>
+</div>
+</form>
+<p class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                Already have an account?
+                <a class="font-medium text-primary hover:underline" href="#">Log in</a>
+</p>
+</div>
+</div>
+<aside class="hidden w-full shrink-0 flex-col items-center justify-center bg-slate-100 p-12 dark:bg-slate-900 lg:flex lg:w-1/2">
+<div class="max-w-md text-center">
+<div class="h-24 w-24 text-primary mx-auto">
+</div>
+<h2 class="mt-6 text-3xl font-bold text-slate-900 dark:text-white">Start your journey to a smaller carbon footprint.</h2>
+<p class="mt-4 text-lg text-slate-600 dark:text-slate-300">Track your activities, gain insights, and contribute to a healthier planet. Every small step counts.</p>
+</div>
+</aside>
+</div>
+
+<script>
+document.querySelector("form").addEventListener("submit", async (e) => {
+    e.preventDefault(); // stop page reload
+
+    const email = document.getElementById("email").value;
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/", { // 👈 adjust URL if deployed
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                username: username,
+                password: password
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert("Signup successful 🎉");
+            console.log(data);
+
+            // optionally redirect to login page
+            window.location.href = "/index.html";
+        } else {
+            const error = await response.json();
+            alert("Error: " + error.detail);
+        }
+    } catch (err) {
+        console.error("Network error:", err);
+        alert("Could not connect to server.");
+    }
+});
+</script>
+
+
+</body></html>
