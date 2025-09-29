@@ -1,58 +1,81 @@
-from groq import Groq
-from dotenv import load_dotenv
 import os
+import sqlite3
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 
-# Load API key from .env
+# Load env vars
 load_dotenv()
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+groq_api_key = os.getenv("GROQ_API_KEY")
 
-# Pre-prompt using LangChain style system message
-SYSTEM_PROMPT = """
-You are EcoTrack, an AI assistant that helps users understand their carbon footprint.  
-Your job is to:
-1. Analyze the user’s described activities (like transport, diet, energy use).  
-2. Estimate a carbon score in grams of CO2 equivalent (CO2e).  
-3. Provide 2–7 actionable, ecology-focused tips to reduce their footprint.  
+# Connect to SQLite (creates file if not exists)
+conn = sqlite3.connect("chat_history.db")
+cursor = conn.cursor()
 
-⚠️ Important rules:  
-- Only talk about ecology, sustainability, and carbon safety.  
-- Do not answer unrelated questions (politics, sports, etc.). Politely remind the user you only handle green and eco topics.  
-- Always structure responses in this format:
+# Create table for storing history
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS chats (
+    user_id TEXT,
+    role TEXT,
+    message TEXT
+)
+""")
+conn.commit()
 
-Based on your activities, your estimated carbon score is **<NUMBER>g CO2e**.
+# Initialize model
+llm = ChatGroq(
+    groq_api_key=groq_api_key,
+    model="llama-3.3-70b-versatile",
+    temperature=0.7,
+)
 
-Here are some suggestions to reduce your footprint:
-1. ...
-2. ...
-3. ...
-.. ...
-"""
+# Memory object
+memory = ConversationBufferMemory(return_messages=True)
 
-def generate_response(user_input: str) -> str:
-    completion = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_input}
-        ],
-        temperature=0.7,
-        max_completion_tokens=2048,
-        top_p=1,
-        reasoning_effort="medium",
-        stream=True,
+# LangChain conversation wrapper
+conversation = ConversationChain(
+    llm=llm,
+    memory=memory,
+    verbose=True
+)
+
+# Helper to save chat to DB
+def save_message(user_id, role, message):
+    cursor.execute(
+        "INSERT INTO chats (user_id, role, message) VALUES (?, ?, ?)",
+        (user_id, role, message)
     )
+    conn.commit()
 
-    # Collect streamed output
-    response_chunks = []
-    for chunk in completion:
-        if chunk.choices[0].delta.content:
-            response_chunks.append(chunk.choices[0].delta.content)
+# Helper to load user history into memory
+def load_history(user_id):
+    cursor.execute("SELECT role, message FROM chats WHERE user_id=? ORDER BY rowid", (user_id,))
+    rows = cursor.fetchall()
+    memory.chat_memory.messages.clear()
+    for role, msg in rows:
+        if role == "user":
+            memory.chat_memory.add_user_message(msg)
+        else:
+            memory.chat_memory.add_ai_message(msg)
 
-    return "".join(response_chunks)
+# Main chat function
+def chat(user_id, user_input):
+    # Load history for this user
+    load_history(user_id)
+
+    # Generate response
+    response = conversation.predict(input=user_input)
+
+    # Save both user + AI messages
+    save_message(user_id, "user", user_input)
+    save_message(user_id, "ai", response)
+
+    return response
 
 # Example usage
 if __name__ == "__main__":
-    prompt = "I drove to work, ate a beef burger for lunch, and used electricity for 8 hours."
-    result = generate_response(prompt)
-    print(result)
+    uid = "user_123"
+    print(chat(uid, "What is my name?"))
+    #print(chat(uid, "Can you remind me what I just asked?"))
 
