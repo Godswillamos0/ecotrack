@@ -29,7 +29,7 @@ class Message(BaseModel):
     message: str = Field(..., example="Hello, how are you?")
 
 
-@router.post("/chat", status_code=status.HTTP_200_OK, response_model=dict)
+@router.post("/", status_code=status.HTTP_200_OK, response_model=dict)
 async def chat_with_ai(message: Message, 
                        user: user_dependency):
     if not user:
@@ -41,4 +41,5 @@ async def chat_with_ai(message: Message,
         
     return {
         "reply" : chat(user['username'], message.message)
+
         }
